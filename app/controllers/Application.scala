@@ -42,36 +42,31 @@ object Application extends Controller with MongoController {
   /**
    * @return a Json array of `MeasuringStation`
    */
-  def stations = Action {
-    Async {
+  def stations = Action.async {
       stationsCollection.
         find(Json.obj()).
         cursor[MeasuringStation].toList.map { stations =>
           Ok(Json.toJson(stations))
         }
-    }
   }
 
   /**
    * @param id the station id
    * @return a Json representation of a single `MeasuringStation` or `NotFound` if there is no station with the given id
    */
-  def station(id: Int) = Action {
-    Async {
+  def station(id: Int) = Action.async {
       stationsCollection.
         find(Json.obj("measuringStationId" -> id)).
         cursor[MeasuringStation].headOption.map(_.map { station =>
           Ok(Json.toJson(station))
         }.getOrElse(NotFound))
     }
-  }
 
   /**
    * @param filter is used to filter the resulting list by station name
    * @return a Json array of (id: Int, name: String) tuples
    */
-  def stationList(filter: String) = Action {
-    Async {
+  def stationList(filter: String) = Action.async {
       val regex = "(?i).*?" + filter + ".*"
 
       stationsCollection.
@@ -84,11 +79,9 @@ object Application extends Controller with MongoController {
               "name" -> station.name)
           }))
         }
-    }
   }
 
-  def history(id: Int, from: Long, to: Long) = Action {
-    Async {
+  def history(id: Int, from: Long, to: Long) = Action.async {
       historyCollection.
         find(Json.obj("measuringStationId" -> id,
           "measurements" -> Json.obj(
@@ -99,7 +92,6 @@ object Application extends Controller with MongoController {
         cursor[MeasuringStation].toList.map { stations =>
           Ok(Json.prettyPrint(Json.toJson(stations)))
         }
-    }
   }
 
   def persistStationData() = {
