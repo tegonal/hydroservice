@@ -7,7 +7,6 @@ import play.api.libs.ws.WS
 import scala.xml._
 import scala.xml.parsing._
 import play.api.libs.json._
-import play.api.cache.Cache
 import scala.concurrent.duration.DurationInt
 import play.api.libs.concurrent.Akka
 import models._
@@ -22,6 +21,8 @@ object Application extends Controller with MongoController {
   def stationsCollection: JSONCollection = db.collection[JSONCollection]("stations")
 
   def historyCollection: JSONCollection = db.collection[JSONCollection]("stations_history")
+
+  val STATION_ID = "stationId"
 
   /**
    * reloading the data into db
@@ -43,11 +44,11 @@ object Application extends Controller with MongoController {
    * @return a Json array of `MeasuringStation`
    */
   def stations = Action.async {
-      stationsCollection.
-        find(Json.obj()).
-        cursor[MeasuringStation].toList.map { stations =>
-          Ok(Json.toJson(stations))
-        }
+    stationsCollection.
+      find(Json.obj()).
+      cursor[MeasuringStation].toList.map { stations =>
+        Ok(Json.toJson(stations))
+      }
   }
 
   /**
@@ -55,43 +56,43 @@ object Application extends Controller with MongoController {
    * @return a Json representation of a single `MeasuringStation` or `NotFound` if there is no station with the given id
    */
   def station(id: Int) = Action.async {
-      stationsCollection.
-        find(Json.obj("measuringStationId" -> id)).
-        cursor[MeasuringStation].headOption.map(_.map { station =>
-          Ok(Json.toJson(station))
-        }.getOrElse(NotFound))
-    }
+    stationsCollection.
+      find(Json.obj(STATION_ID -> id)).
+      cursor[MeasuringStation].headOption.map(_.map { station =>
+        Ok(Json.toJson(station))
+      }.getOrElse(NotFound))
+  }
 
   /**
    * @param filter is used to filter the resulting list by station name
    * @return a Json array of (id: Int, name: String) tuples
    */
   def stationList(filter: String) = Action.async {
-      val regex = "(?i).*?" + filter + ".*"
+    val regex = "(?i).*?" + filter + ".*"
 
-      stationsCollection.
-        find(Json.obj("name" -> Json.obj("$regex" -> regex))).
-        sort(Json.obj("name" -> 1)).
-        cursor[MeasuringStation].toList.map { stations =>
-          Ok(Json.toJson(stations.map { station =>
-            Json.obj(
-              "id" -> station.measuringStationId,
-              "name" -> station.name)
-          }))
-        }
+    stationsCollection.
+      find(Json.obj("name" -> Json.obj("$regex" -> regex))).
+      sort(Json.obj("name" -> 1)).
+      cursor[MeasuringStation].toList.map { stations =>
+        Ok(Json.toJson(stations.map { station =>
+          Json.obj(
+            STATION_ID -> station.stationId,
+            "name" -> station.name)
+        }))
+      }
   }
 
   def history(id: Int, from: Long, to: Long) = Action.async {
-      historyCollection.
-        find(Json.obj("measuringStationId" -> id,
-          "measurements" -> Json.obj(
-            "$elemMatch" -> Json.obj(
-              "date" -> Json.obj(
-                "$gte" -> from,
-                "$lt" -> to))))).
-        cursor[MeasuringStation].toList.map { stations =>
-          Ok(Json.prettyPrint(Json.toJson(stations)))
-        }
+    historyCollection.
+      find(Json.obj(STATION_ID -> id,
+        "measurements" -> Json.obj(
+          "$elemMatch" -> Json.obj(
+            "date" -> Json.obj(
+              "$gte" -> from,
+              "$lt" -> to))))).
+      cursor[MeasuringStation].toList.map { stations =>
+        Ok(Json.prettyPrint(Json.toJson(stations)))
+      }
   }
 
   def persistStationData() = {
@@ -120,7 +121,7 @@ object Application extends Controller with MongoController {
 
   def update(station: MeasuringStation) = {
     stationsCollection.update(
-      Json.obj("measuringStationId" -> station.measuringStationId),
+      Json.obj(STATION_ID -> station.stationId),
       Json.obj("$set" -> station)).map { _ => () }
 
     updateHistory(station)
@@ -131,7 +132,7 @@ object Application extends Controller with MongoController {
   }
 
   def getByStationId(id: Int) = {
-    stationsCollection.find(Json.obj("measuringStationId" -> id)).cursor[JsObject].headOption.map(_.map(js => (js.as[MeasuringStation], id)))
+    stationsCollection.find(Json.obj(STATION_ID -> id)).cursor[JsObject].headOption.map(_.map(js => (js.as[MeasuringStation], id)))
   }
 
   def retrieveData =

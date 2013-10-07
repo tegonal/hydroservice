@@ -1,0 +1,3 @@
+db.stations.update({}, {$rename:{"measuringStationId":"stationId"}}, { multi: true })
+
+db.stations_history.update({}, {$rename:{"measuringStationId":"stationId"}}, { multi: true })

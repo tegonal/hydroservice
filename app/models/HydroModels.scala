@@ -65,7 +65,7 @@ object Measurement {
   }
 }
 
-case class MeasuringStation(measuringStationId: Int, name: String, measurements: Seq[Measurement])
+case class MeasuringStation(stationId: Int, name: String, measurements: Seq[Measurement])
 
 object MeasuringStation {
   implicit val measuringStationFormat = Json.format[MeasuringStation]
