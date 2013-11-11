@@ -13,8 +13,10 @@ import models._
 import reactivemongo.api._
 import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.api._
+import reactivemongo.bson._
 import play.modules.reactivemongo.json.BSONFormats._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object Application extends Controller with MongoController {
 
@@ -46,7 +48,7 @@ object Application extends Controller with MongoController {
   def stations = Action.async {
     stationsCollection.
       find(Json.obj()).
-      cursor[MeasuringStation].toList.map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
         Ok(Json.toJson(stations))
       }
   }
@@ -73,7 +75,7 @@ object Application extends Controller with MongoController {
     stationsCollection.
       find(Json.obj("name" -> Json.obj("$regex" -> regex))).
       sort(Json.obj("name" -> 1)).
-      cursor[MeasuringStation].toList.map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
         Ok(Json.toJson(stations.map { station =>
           Json.obj(
             STATION_ID -> station.stationId,
@@ -90,7 +92,7 @@ object Application extends Controller with MongoController {
             "date" -> Json.obj(
               "$gte" -> from,
               "$lt" -> to))))).
-      cursor[MeasuringStation].toList.map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
         Ok(Json.prettyPrint(Json.toJson(stations)))
       }
   }
