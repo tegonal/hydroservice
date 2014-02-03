@@ -48,7 +48,7 @@ object Application extends Controller with MongoController {
   def stations = Action.async {
     stationsCollection.
       find(Json.obj()).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
         Ok(Json.toJson(stations))
       }
   }
@@ -75,7 +75,7 @@ object Application extends Controller with MongoController {
     stationsCollection.
       find(Json.obj("name" -> Json.obj("$regex" -> regex))).
       sort(Json.obj("name" -> 1)).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
         Ok(Json.toJson(stations.map { station =>
           Json.obj(
             STATION_ID -> station.stationId,
@@ -92,7 +92,7 @@ object Application extends Controller with MongoController {
             "date" -> Json.obj(
               "$gte" -> from,
               "$lt" -> to))))).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue, false).map { stations =>
+      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
         Ok(Json.prettyPrint(Json.toJson(stations)))
       }
   }
