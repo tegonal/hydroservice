@@ -11,12 +11,12 @@ class HydroModelsSpec extends Specification {
                             <Name>Aabach - Hitzkirch</Name>
                             <Datum>16.07.2013</Datum>
                             <Zeit>09:00</Zeit>
-                            <Wert>462.95</Wert>
-                            <Wert dt="-24h">462.95</Wert>
-                            <Wert Typ="delta24">-0.006</Wert>
-                            <Wert Typ="m24">462.95</Wert>
-                            <Wert Typ="max24">462.95</Wert>
-                            <Wert Typ="min24">462.94</Wert>
+                            <Wert dt="0h" Typ="c">462.95</Wert>
+                            <Wert Typ="c" dt="-24h">462.95</Wert>
+                            <Wert dt="0h" Typ="delta24">-0.006</Wert>
+                            <Wert dt="0h" Typ="m24">462.95</Wert>
+                            <Wert dt="0h" Typ="max24">462.95</Wert>
+                            <Wert dt="0h" Typ="min24">462.94</Wert>
                           </MesPar>
 
   val multipleMeasurements = <AKT_Data ZeitSt="16.07.2013 10:12" ID="SMS-Liste">
@@ -24,100 +24,100 @@ class HydroModelsSpec extends Specification {
                                  <Name>Aare - Bern</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>16.17</Wert>
-                                 <Wert dt="-24h">16.05</Wert>
-                                 <Wert Typ="delta24">0.120</Wert>
-                                 <Wert Typ="m24">16.95</Wert>
-                                 <Wert Typ="max24">18.43</Wert>
-                                 <Wert Typ="min24">15.47</Wert>
+                                 <Wert dt="0h" Typ="c">16.17</Wert>
+                                 <Wert Typ="c" dt="-24h">16.05</Wert>
+                                 <Wert dt="0h" Typ="delta24">0.120</Wert>
+                                 <Wert dt="0h" Typ="m24">16.95</Wert>
+                                 <Wert dt="0h" Typ="max24">18.43</Wert>
+                                 <Wert dt="0h" Typ="min24">15.47</Wert>
                                </MesPar>
                                <MesPar Var="00" Typ="02" StrNr="2135" DH="HBCHa">
                                  <Name>Aare - Bern</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>502.46</Wert>
-                                 <Wert dt="-24h">502.53</Wert>
-                                 <Wert Typ="delta24">-0.068</Wert>
-                                 <Wert Typ="m24">502.50</Wert>
-                                 <Wert Typ="max24">502.53</Wert>
-                                 <Wert Typ="min24">502.46</Wert>
+                                 <Wert dt="0h" Typ="c">502.46</Wert>
+                                 <Wert Typ="c" dt="-24h">502.53</Wert>
+                                 <Wert dt="0h" Typ="delta24">-0.068</Wert>
+                                 <Wert dt="0h" Typ="m24">502.50</Wert>
+                                 <Wert dt="0h" Typ="max24">502.53</Wert>
+                                 <Wert dt="0h" Typ="min24">502.46</Wert>
                                </MesPar>
                                <MesPar Var="10" Typ="10" StrNr="2135" DH="HBCHa">
                                  <Name>Aare - Bern</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>156.96</Wert>
-                                 <Wert dt="-24h">167.31</Wert>
-                                 <Wert Typ="delta24">-10.354</Wert>
-                                 <Wert Typ="m24">163.79</Wert>
-                                 <Wert Typ="max24">167.78</Wert>
-                                 <Wert Typ="min24">156.96</Wert>
+                                 <Wert dt="0h" Typ="c">156.96</Wert>
+                                 <Wert Typ="c" dt="-24h">167.31</Wert>
+                                 <Wert dt="0h" Typ="delta24">-10.354</Wert>
+                                 <Wert dt="0h" Typ="m24">163.79</Wert>
+                                 <Wert dt="0h" Typ="max24">167.78</Wert>
+                                 <Wert dt="0h" Typ="min24">156.96</Wert>
                                </MesPar>
                                <MesPar Var="00" Typ="03" StrNr="2019" DH="HBCHa">
                                  <Name>Aare - Brienzwiler</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>7.32</Wert>
-                                 <Wert dt="-24h">7.44</Wert>
-                                 <Wert Typ="delta24">-0.120</Wert>
-                                 <Wert Typ="m24">8.42</Wert>
-                                 <Wert Typ="max24">9.47</Wert>
-                                 <Wert Typ="min24">7.32</Wert>
+                                 <Wert dt="0h" Typ="c">7.32</Wert>
+                                 <Wert Typ="c" dt="-24h">7.44</Wert>
+                                 <Wert dt="0h" Typ="delta24">-0.120</Wert>
+                                 <Wert dt="0h" Typ="m24">8.42</Wert>
+                                 <Wert dt="0h" Typ="max24">9.47</Wert>
+                                 <Wert dt="0h" Typ="min24">7.32</Wert>
                                </MesPar>
                                <MesPar Var="00" Typ="02" StrNr="2019" DH="HBCHa">
                                  <Name>Aare - Brienzwiler</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>570.90</Wert>
-                                 <Wert dt="-24h">570.86</Wert>
-                                 <Wert Typ="delta24">0.042</Wert>
-                                 <Wert Typ="m24">570.75</Wert>
-                                 <Wert Typ="max24">570.94</Wert>
-                                 <Wert Typ="min24">570.39</Wert>
+                                 <Wert dt="0h" Typ="c">570.90</Wert>
+                                 <Wert Typ="c" dt="-24h">570.86</Wert>
+                                 <Wert dt="0h" Typ="delta24">0.042</Wert>
+                                 <Wert dt="0h" Typ="m24">570.75</Wert>
+                                 <Wert dt="0h" Typ="max24">570.94</Wert>
+                                 <Wert dt="0h" Typ="min24">570.39</Wert>
                                </MesPar>
                                <MesPar Var="10" Typ="10" StrNr="2019" DH="HBCHa">
                                  <Name>Aare - Brienzwiler</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>77.68</Wert>
-                                 <Wert dt="-24h">75.06</Wert>
-                                 <Wert Typ="delta24">2.621</Wert>
-                                 <Wert Typ="m24">68.58</Wert>
-                                 <Wert Typ="max24">80.02</Wert>
-                                 <Wert Typ="min24">47.78</Wert>
+                                 <Wert dt="0h" Typ="c">77.68</Wert>
+                                 <Wert Typ="c" dt="-24h">75.06</Wert>
+                                 <Wert dt="0h" Typ="delta24">2.621</Wert>
+                                 <Wert dt="0h" Typ="m24">68.58</Wert>
+                                 <Wert dt="0h" Typ="max24">80.02</Wert>
+                                 <Wert dt="0h" Typ="min24">47.78</Wert>
                                </MesPar>
                                <MesPar Var="00" Typ="03" StrNr="2016" DH="HBCHa">
                                  <Name>Aare - Brugg</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>19.27</Wert>
-                                 <Wert dt="-24h">18.89</Wert>
-                                 <Wert Typ="delta24">0.380</Wert>
-                                 <Wert Typ="m24">19.36</Wert>
-                                 <Wert Typ="max24">19.69</Wert>
-                                 <Wert Typ="min24">18.86</Wert>
+                                 <Wert dt="0h" Typ="c">19.27</Wert>
+                                 <Wert Typ="c" dt="-24h">18.89</Wert>
+                                 <Wert dt="0h" Typ="delta24">0.380</Wert>
+                                 <Wert dt="0h" Typ="m24">19.36</Wert>
+                                 <Wert dt="0h" Typ="max24">19.69</Wert>
+                                 <Wert dt="0h" Typ="min24">18.86</Wert>
                                </MesPar>
                                <MesPar Var="00" Typ="02" StrNr="2016" DH="HBCHa">
                                  <Name>Aare - Brugg</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>332.38</Wert>
-                                 <Wert dt="-24h">332.45</Wert>
-                                 <Wert Typ="delta24">-0.067</Wert>
-                                 <Wert Typ="m24">332.45</Wert>
-                                 <Wert Typ="max24">332.49</Wert>
-                                 <Wert Typ="min24">332.38</Wert>
+                                 <Wert dt="0h" Typ="c">332.38</Wert>
+                                 <Wert Typ="c" dt="-24h">332.45</Wert>
+                                 <Wert dt="0h" Typ="delta24">-0.067</Wert>
+                                 <Wert dt="0h" Typ="m24">332.45</Wert>
+                                 <Wert dt="0h" Typ="max24">332.49</Wert>
+                                 <Wert dt="0h" Typ="min24">332.38</Wert>
                                </MesPar>
                                <MesPar Var="10" Typ="10" StrNr="2016" DH="HBCHa">
                                  <Name>Aare - Brugg</Name>
                                  <Datum>16.07.2013</Datum>
                                  <Zeit>10:00</Zeit>
-                                 <Wert>278.64</Wert>
-                                 <Wert dt="-24h">287.84</Wert>
-                                 <Wert Typ="delta24">-9.197</Wert>
-                                 <Wert Typ="m24">287.64</Wert>
-                                 <Wert Typ="max24">293.82</Wert>
-                                 <Wert Typ="min24">277.96</Wert>
+                                 <Wert dt="0h" Typ="c">278.64</Wert>
+                                 <Wert Typ="c" dt="-24h">287.84</Wert>
+                                 <Wert dt="0h" Typ="delta24">-9.197</Wert>
+                                 <Wert dt="0h" Typ="m24">287.64</Wert>
+                                 <Wert dt="0h" Typ="max24">293.82</Wert>
+                                 <Wert dt="0h" Typ="min24">277.96</Wert>
                                </MesPar>
                              </AKT_Data>
 
@@ -126,34 +126,34 @@ class HydroModelsSpec extends Specification {
                                     <Name>Aare - Brügg</Name>
                                     <Datum>16.07.2013</Datum>
                                     <Zeit>10:10</Zeit>
-                                    <Wert>19.30</Wert>
-                                    <Wert dt="-24h">18.84</Wert>
-                                    <Wert Typ="delta24">0.460</Wert>
-                                    <Wert Typ="m24">19.32</Wert>
-                                    <Wert Typ="max24">19.80</Wert>
-                                    <Wert Typ="min24">18.88</Wert>
+                                    <Wert dt="0h" Typ="c">19.30</Wert>
+                                    <Wert Typ="c" dt="-24h">18.84</Wert>
+                                    <Wert dt="0h" Typ="delta24">0.460</Wert>
+                                    <Wert dt="0h" Typ="m24">19.32</Wert>
+                                    <Wert dt="0h" Typ="max24">19.80</Wert>
+                                    <Wert dt="0h" Typ="min24">18.88</Wert>
                                   </MesPar>
                                   <MesPar Var="00" Typ="02" StrNr="2029" DH="HBCHa">
                                     <Name>Aare - Brügg</Name>
                                     <Datum>16.07.2013</Datum>
                                     <Zeit>10:10</Zeit>
-                                    <Wert>426.80</Wert>
-                                    <Wert dt="-24h">426.80</Wert>
-                                    <Wert Typ="delta24">0.005</Wert>
-                                    <Wert Typ="m24">426.80</Wert>
-                                    <Wert Typ="max24">426.80</Wert>
-                                    <Wert Typ="min24">426.79</Wert>
+                                    <Wert dt="0h" Typ="c">426.80</Wert>
+                                    <Wert Typ="c" dt="-24h">426.80</Wert>
+                                    <Wert dt="0h" Typ="delta24">0.005</Wert>
+                                    <Wert dt="0h" Typ="m24">426.80</Wert>
+                                    <Wert dt="0h" Typ="max24">426.80</Wert>
+                                    <Wert dt="0h" Typ="min24">426.79</Wert>
                                   </MesPar>
                                   <MesPar Var="30" Typ="10" StrNr="2029" DH="HBCHa">
                                     <Name>Aare - Brügg, Aegerten</Name>
                                     <Datum>16.07.2013</Datum>
                                     <Zeit>10:10</Zeit>
-                                    <Wert>238.31</Wert>
-                                    <Wert dt="-24h">239.03</Wert>
-                                    <Wert Typ="delta24">-0.721</Wert>
-                                    <Wert Typ="m24">236.86</Wert>
-                                    <Wert Typ="max24">245.65</Wert>
-                                    <Wert Typ="min24">230.84</Wert>
+                                    <Wert dt="0h" Typ="c">238.31</Wert>
+                                    <Wert Typ="c" dt="-24h">239.03</Wert>
+                                    <Wert dt="0h" Typ="delta24">-0.721</Wert>
+                                    <Wert dt="0h" Typ="m24">236.86</Wert>
+                                    <Wert dt="0h" Typ="max24">245.65</Wert>
+                                    <Wert dt="0h" Typ="min24">230.84</Wert>
                                   </MesPar>
                                 </AKT_Data>
 
