@@ -55,8 +55,12 @@ object Measurement {
     (node \ "@Var").text,
     (node \ "@DH").text)
 
-  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Double =
-    NumberFormat.getInstance(new Locale("de", "CH")).parse((node \ "Wert").filter(w => (w \ "@Typ").text == typAttributeValue && (w \ "@dt").text == dtAttributeValue).text).doubleValue()
+  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Double = {
+    (node \ "Wert").filter(w => (w \ "@Typ").text == typAttributeValue && (w \ "@dt").text == dtAttributeValue).text match {
+      case "" => Double.NaN
+      case noneEmpty => NumberFormat.getInstance(new Locale("de", "CH")).parse(noneEmpty).doubleValue()
+    }
+  }
 
   def toDateTime(date: String, time: String): Date = {
     val dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm")
