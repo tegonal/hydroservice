@@ -165,12 +165,12 @@ class HydroModelsSpec extends Specification {
       measurement.variant === "00"
       measurement.measurementType === WATER_LEVEL_ABOVE_SEA_LEVEL
       measurement.date === new DateTime(2013, 7, 16, 9, 0).toDate
-      measurement.current === 462.95
-      measurement.minus24 === 462.95
-      measurement.delta24 === -0.006
-      measurement.mean24 === 462.95
-      measurement.max24 === 462.95
-      measurement.min24 === 462.94
+      measurement.current.get === 462.95
+      measurement.minus24.get === 462.95
+      measurement.delta24.get === -0.006
+      measurement.mean24.get === 462.95
+      measurement.max24.get === 462.95
+      measurement.min24.get === 462.94
     }
 
     "be transformed to correct Json representation" in {

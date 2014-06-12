@@ -31,12 +31,12 @@ object MeasurementType {
 
 case class Measurement(
   date: Date,
-  current: Double,
-  minus24: Double,
-  delta24: Double,
-  mean24: Double,
-  max24: Double,
-  min24: Double,
+  current: Option[Double],
+  minus24: Option[Double],
+  delta24: Option[Double],
+  mean24: Option[Double],
+  max24: Option[Double],
+  min24: Option[Double],
   measurementType: String,
   variant: String,
   dataOwner: String)
@@ -56,10 +56,10 @@ object Measurement {
     (node \ "@Var").text,
     (node \ "@DH").text)
 
-  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Double = {
+  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Option[Double] = {
     (node \ "Wert").filter(w => (w \ "@Typ").text == typAttributeValue && (w \ "@dt").text == dtAttributeValue).text match {
-      case "" => Double.MaxValue
-      case noneEmpty => NumberFormat.getInstance(new Locale("de", "CH")).parse(noneEmpty).doubleValue()
+      case "" => None
+      case noneEmpty => Some(NumberFormat.getInstance(new Locale("de", "CH")).parse(noneEmpty).doubleValue())
     }
   }
 
