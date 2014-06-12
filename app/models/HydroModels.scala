@@ -45,8 +45,8 @@ object Measurement {
 
   def fromXML(node: Node) = Measurement(
     toDateTime((node \ "Datum").text, (node \ "Zeit").text),
-    extractValue(node, "c"),
-    extractValue(node, "c", "-24h"),
+    extractValue(node, ""),
+    extractValue(node, "", "-24h"),
     extractValue(node, "delta24"),
     extractValue(node, "m24"),
     extractValue(node, "max24"),
@@ -55,7 +55,7 @@ object Measurement {
     (node \ "@Var").text,
     (node \ "@DH").text)
 
-  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Double = {
+  def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = ""): Double = {
     (node \ "Wert").filter(w => (w \ "@Typ").text == typAttributeValue && (w \ "@dt").text == dtAttributeValue).text match {
       case "" => Double.NaN
       case noneEmpty => NumberFormat.getInstance(new Locale("de", "CH")).parse(noneEmpty).doubleValue()
