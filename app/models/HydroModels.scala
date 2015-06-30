@@ -9,6 +9,7 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import java.text.NumberFormat
 import java.util.Locale
+import java.text.ParseException
 
 object MeasurementType {
   val FLOW_M_3_S = "FLOW_M3_S"
@@ -24,7 +25,7 @@ object MeasurementType {
     case "02" => WATER_LEVEL_ABOVE_SEA_LEVEL
     case "01" => WATER_LEVEL_IN_M
     case "03" => TEMPERATURE
-    case x => UNKNOWN + x
+    case x    => UNKNOWN + x
   }
 
 }
@@ -58,7 +59,7 @@ object Measurement {
 
   def extractValue(node: Node, typAttributeValue: String, dtAttributeValue: String = "0h"): Option[Double] = {
     (node \ "Wert").filter(w => (w \ "@Typ").text == typAttributeValue && (w \ "@dt").text == dtAttributeValue).text match {
-      case "" => None
+      case ""        => None
       case noneEmpty => Some(NumberFormat.getInstance(new Locale("de", "CH")).parse(noneEmpty).doubleValue())
     }
   }
@@ -66,7 +67,13 @@ object Measurement {
   def toDateTime(date: String, time: String): Date = {
     val dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm")
 
-    dateFormat.parse("%s %s".format(date, time))
+    try {
+      dateFormat.parse("%s %s".format(date, time))
+    } catch {
+      case e: ParseException =>
+        Logger.warn(s"Could not parse date/time. Error message: ${e.getMessage}")
+        new Date()
+    }
   }
 }
 
