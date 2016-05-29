@@ -198,9 +198,9 @@ class HydroModelsSpec extends Specification {
     "be parsed" in {
       val measurements = MeasuringStation.fromXML(multipleMeasurements)
 
-      measurements.map(_._1) must containAllOf(List(2135, 2019, 2016))
+      measurements.map(_._1) must containAllOf(List("2016", "2019", "2135"))
       measurements.map(_._2.measurements.size) must containAllOf(List(3, 3, 3))
-      measurements.map(_._2.name) must containAllOf(List("Aare - Bern", "Aare - Brienzwiler", "Aare - Brugg"))
+      measurements.map(_._2.name) must containAllOf(List("Aare - Brugg", "Aare - Brienzwiler", "Aare - Bern"))
     }
   }
 

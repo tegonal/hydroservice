@@ -77,16 +77,16 @@ object Measurement {
   }
 }
 
-case class MeasuringStation(stationId: Int, name: String, measurements: Seq[Measurement])
+case class MeasuringStation(stationId: String, name: String, measurements: Seq[Measurement])
 
 object MeasuringStation {
   implicit val measuringStationFormat = Json.format[MeasuringStation]
 
-  def fromXML(node: Node): Map[Int, MeasuringStation] = {
+  def fromXML(node: Node): Map[String, MeasuringStation] = {
     val measurements = for {
       mesPar <- (node \ "MesPar")
       name = (mesPar \ "Name").text
-    } yield ((mesPar \ "@StrNr").text.toInt, name, Measurement.fromXML(mesPar))
+    } yield ((mesPar \ "@StrNr").text, name, Measurement.fromXML(mesPar))
 
     measurements.groupBy(_._1).map {
       case (id, grp) => (id, grp.head._2, grp.map(_._3)) // keep one name only

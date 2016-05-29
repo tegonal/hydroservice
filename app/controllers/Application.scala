@@ -1,14 +1,12 @@
 package controllers
 
 import play.api._
-import play.api.Play.current
 import play.api.mvc._
-import play.api.libs.ws.WS
 import scala.xml._
 import scala.xml.parsing._
 import play.api.libs.json._
 import scala.concurrent.duration.DurationInt
-import play.api.libs.concurrent.Akka
+import akka.actor._
 import models._
 import reactivemongo.api._
 import play.modules.reactivemongo._
@@ -16,20 +14,29 @@ import play.modules.reactivemongo.json.collection.JSONCollection
 import reactivemongo.api._
 import reactivemongo.bson._
 import play.modules.reactivemongo.json.BSONFormats._
+import reactivemongo.bson.BSONObjectID
+import play.modules.reactivemongo._
+import reactivemongo.api.ReadPreference
+import reactivemongo.play.json._
+import reactivemongo.play.json.collection._
+import play.modules.reactivemongo.json.BSONFormats._
+import javax.inject._
+import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object Application extends Controller with MongoController {
+@Singleton
+class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: ActorSystem, configuration: Configuration) extends Controller with MongoController with ReactiveMongoComponents {
 
-  def stationsCollection: JSONCollection = db.collection[JSONCollection]("stations")
+  val stationsCollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("stations"))
 
-  def historyCollection: JSONCollection = db.collection[JSONCollection]("stations_history")
+  val historyCollection: Future[JSONCollection] = database.map(_.collection[JSONCollection]("stations_history"))
 
   val STATION_ID = "stationId"
 
   /**
    * reloading the data into db
    */
-  val dataReloader = Akka.system.scheduler.schedule(0 milliseconds, 10 minutes) {
+  val dataReloader = system.scheduler.schedule(0 milliseconds, 10 minutes) {
     try {
       persistStationData()
     } catch {
@@ -46,23 +53,26 @@ object Application extends Controller with MongoController {
    * @return a Json array of `MeasuringStation`
    */
   def stations = Action.async {
-    stationsCollection.
-      find(Json.obj()).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
-        Ok(Json.toJson(stations))
-      }
+    val cursor = stationsCollection.flatMap { stations =>
+      stations.find(Json.obj()).
+        cursor[MeasuringStation](ReadPreference.primary).collect[List]()
+    }
+    cursor map { stations =>
+      Ok(Json.toJson(stations))
+    }
   }
 
   /**
    * @param id the station id
    * @return a Json representation of a single `MeasuringStation` or `NotFound` if there is no station with the given id
    */
-  def station(id: Int) = Action.async {
-    stationsCollection.
-      find(Json.obj(STATION_ID -> id)).
-      cursor[MeasuringStation].headOption.map(_.map { station =>
-        Ok(Json.toJson(station))
-      }.getOrElse(NotFound))
+  def station(id: String) = Action.async {
+    stationsCollection.flatMap { stations =>
+      stations.find(Json.obj(STATION_ID -> id)).
+        cursor[MeasuringStation].headOption.map(_.map { station =>
+          Ok(Json.toJson(station))
+        }.getOrElse(NotFound))
+    }
   }
 
   /**
@@ -72,29 +82,31 @@ object Application extends Controller with MongoController {
   def stationList(filter: String) = Action.async {
     val regex = "(?i).*?" + filter + ".*"
 
-    stationsCollection.
-      find(Json.obj("name" -> Json.obj("$regex" -> regex))).
-      sort(Json.obj("name" -> 1)).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
-        Ok(Json.toJson(stations.map { station =>
-          Json.obj(
-            STATION_ID -> station.stationId,
-            "name" -> station.name)
-        }))
-      }
+    stationsCollection.flatMap { stations =>
+      stations.find(Json.obj("name" -> Json.obj("$regex" -> regex))).
+        sort(Json.obj("name" -> 1)).
+        cursor[MeasuringStation].collect[List]().map { stations =>
+          Ok(Json.toJson(stations.map { station =>
+            Json.obj(
+              STATION_ID -> station.stationId,
+              "name" -> station.name)
+          }))
+        }
+    }
   }
 
-  def history(id: Int, from: Long, to: Long) = Action.async {
-    historyCollection.
-      find(Json.obj(STATION_ID -> id,
+  def history(id: String, from: Long, to: Long) = Action.async {
+    historyCollection.flatMap { history =>
+      history.find(Json.obj(STATION_ID -> id,
         "measurements" -> Json.obj(
           "$elemMatch" -> Json.obj(
             "date" -> Json.obj(
               "$gte" -> from,
               "$lt" -> to))))).
-      cursor[MeasuringStation].collect[Vector](Int.MaxValue).map { stations =>
-        Ok(Json.prettyPrint(Json.toJson(stations)))
-      }
+        cursor[MeasuringStation].collect[List]().map { stations =>
+          Ok(Json.prettyPrint(Json.toJson(stations)))
+        }
+    }
   }
 
   def persistStationData() = {
@@ -117,30 +129,41 @@ object Application extends Controller with MongoController {
   }
 
   def insert(station: MeasuringStation) = {
-    stationsCollection.insert(station)
-    updateHistory(station)
+    stationsCollection.flatMap { stations =>
+      stations.insert(station)
+      updateHistory(station)
+    }
   }
 
   def update(station: MeasuringStation) = {
-    stationsCollection.update(
-      Json.obj(STATION_ID -> station.stationId),
-      Json.obj("$set" -> station)).map { _ => () }
-
-    updateHistory(station)
+    stationsCollection.flatMap { stations =>
+      stations.update(
+        Json.obj(STATION_ID -> station.stationId),
+        Json.obj("$set" -> station)).map { _ => () }
+      updateHistory(station)
+    }
   }
 
   def updateHistory(station: MeasuringStation) = {
-    historyCollection.insert(station)
+    historyCollection.flatMap { history =>
+      history.insert(station)
+    }
   }
 
-  def getByStationId(id: Int) = {
-    stationsCollection.find(Json.obj(STATION_ID -> id)).cursor[JsObject].headOption.map(_.map(js => (js.as[MeasuringStation], id)))
+  def getByStationId(id: String) = {
+    val cursor = stationsCollection.flatMap { stations =>
+      stations.find(Json.obj(STATION_ID -> id))
+        .cursor[MeasuringStation](ReadPreference.primary).collect[List]()
+    }
+    cursor map { stations =>
+      stations.headOption
+    }
   }
 
   def retrieveData =
-    scala.xml.XML.load(Play.current.configuration.getString("hydro.source").get)
+    scala.xml.XML.load(configuration.getString("hydro.source").get)
 
-  def transformXmlToMeasuringStationMap(input: scala.xml.Node): Map[Int, MeasuringStation] =
+  def transformXmlToMeasuringStationMap(input: scala.xml.Node): Map[String, MeasuringStation] =
     MeasuringStation.fromXML(input)
 
 }

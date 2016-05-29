@@ -5,9 +5,9 @@
 # Home page
 GET     /                           controllers.Application.index
 GET     /stations                   controllers.Application.stations
-GET     /stations/:id               controllers.Application.station(id: Int)
+GET     /stations/:id               controllers.Application.station(id: String)
 GET     /stationList                controllers.Application.stationList(filter ?= "")
-GET     /stations/:id/history       controllers.Application.history(id: Int, from: Long ?= 0, to: Long ?= Long.MaxValue)
+GET     /stations/:id/history       controllers.Application.history(id: String, from: Long ?= 0, to: Long ?= Long.MaxValue)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
