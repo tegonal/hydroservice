@@ -23,6 +23,9 @@ import play.modules.reactivemongo.json.BSONFormats._
 import javax.inject._
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import java.security.SecureRandom
+import javax.net.ssl.TrustManager
+import javax.net.ssl.HttpsURLConnection
 
 @Singleton
 class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: ActorSystem, configuration: Configuration) extends Controller with MongoController with ReactiveMongoComponents {
@@ -97,7 +100,8 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: Act
 
   def history(id: String, from: Long, to: Long) = Action.async {
     historyCollection.flatMap { history =>
-      history.find(Json.obj(STATION_ID -> id,
+      history.find(Json.obj(
+        STATION_ID -> id,
         "measurements" -> Json.obj(
           "$elemMatch" -> Json.obj(
             "date" -> Json.obj(
@@ -160,9 +164,13 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: Act
     }
   }
 
-  def retrieveData =
-    scala.xml.XML.load(configuration.getString("hydro.source").get)
+  def retrieveData = {
+    val context = javax.net.ssl.SSLContext.getInstance("SSL")
+    context.init(null, Array(new IgnoreCertificateTrustManager()), new SecureRandom())
+    HttpsURLConnection.setDefaultSSLSocketFactory(context.getSocketFactory)
 
+    scala.xml.XML.load(configuration.getString("hydro.source").get)
+  }
 
   def transformXmlToMeasuringStationMap(input: scala.xml.Node): Map[String, MeasuringStation] =
     MeasuringStation.fromXML(input)
