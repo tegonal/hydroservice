@@ -41,7 +41,7 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: Act
       persistStationData()
     } catch {
       // do nothing, just wait for the next reload
-      case e: Exception => Logger.debug("Got exception while fetching data", e)
+      case e: Exception => Logger.warn("Got exception while fetching data", e)
     }
   }
 
@@ -162,6 +162,7 @@ class Application @Inject() (val reactiveMongoApi: ReactiveMongoApi, system: Act
 
   def retrieveData =
     scala.xml.XML.load(configuration.getString("hydro.source").get)
+
 
   def transformXmlToMeasuringStationMap(input: scala.xml.Node): Map[String, MeasuringStation] =
     MeasuringStation.fromXML(input)
